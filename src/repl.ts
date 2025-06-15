@@ -1,3 +1,7 @@
 export function cleanInput(input: string): string[] {
-  return input.trim().split('  ');
+  return input
+    .toLowerCase()
+    .trim()
+    .split(' ')
+    .filter((word) => word !== "");
 }
