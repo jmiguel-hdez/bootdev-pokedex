@@ -1,5 +1,5 @@
 import { createInterface } from "readline";
-import { getCommands } from "./command.js"
+import { getCommands } from "./commands.js"
 
 export function cleanInput(input: string): string[] {
   return input
@@ -26,14 +26,18 @@ export function startREPL(): void {
       return;
     }
     const commandName = words[0];
-    if (commandName in commands) {
-      try {
-        commands[commandName].callback(commands);
-      } catch (err: unknown) {
-        console.log(`Error: while executing ${commandName}`);
-      }
-    } else {
+    const cmd = commands[commandName];
+
+    if (!cmd) {
       console.log("Unknown command");
+      rl.prompt();
+      return;
+    }
+
+    try {
+      cmd.callback(commands);
+    } catch (err: unknown) {
+      console.log(`Error: while executing ${commandName}`, err);
     }
 
     rl.prompt();
