@@ -1,4 +1,4 @@
-import { initState } from "./state.js";
+import type { State } from "./state.js";
 
 export function cleanInput(input: string): string[] {
   return input
@@ -8,15 +8,15 @@ export function cleanInput(input: string): string[] {
     .filter((word) => word !== "");
 }
 
-export function startREPL(): void {
+export function startREPL(state: State): void {
 
-  const state = initState()
-  state.rl.prompt();
+  const rl = state.readline;
+  rl.prompt();
 
-  state.rl.on("line", async (input: any) => {
+  rl.on("line", async (input: any) => {
     const words = cleanInput(input);
     if (words.length === 0) {
-      state.rl.prompt();
+      rl.prompt();
       return;
     }
     const commandName = words[0];
@@ -24,7 +24,7 @@ export function startREPL(): void {
 
     if (!cmd) {
       console.log("Unknown command");
-      state.rl.prompt();
+      rl.prompt();
       return;
     }
 
@@ -34,6 +34,6 @@ export function startREPL(): void {
       console.log(`Error: while executing ${commandName}`, err);
     }
 
-    state.rl.prompt();
+    rl.prompt();
   });
 }

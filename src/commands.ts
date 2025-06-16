@@ -12,7 +12,7 @@ export function getCommands(): Record<string, CLICommand> {
     },
     exit: {
       name: "exit",
-      description: "Exist the Pokedex",
+      description: "Exits the Pokedex",
       callback: commandExit,
     },
   };

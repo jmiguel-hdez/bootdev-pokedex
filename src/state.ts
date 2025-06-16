@@ -2,7 +2,7 @@ import { createInterface, type Interface } from "readline";
 import { getCommands } from "./commands.js"
 
 export type State = {
-  rl: Interface;
+  readline: Interface;
   commands: Record<string, CLICommand>;
 };
 
@@ -19,7 +19,7 @@ export function initState(): State {
     prompt: "Pokedex > "
   });
   const state: State = {
-    rl: rl,
+    readline: rl,
     commands: getCommands(),
   }
   return state;
