@@ -1,4 +1,5 @@
 import { createInterface } from "readline";
+import { getCommands } from "./command.js"
 
 export function cleanInput(input: string): string[] {
   return input
@@ -14,6 +15,7 @@ export function startREPL(): void {
     output: process.stdout,
     prompt: "Pokedex > "
   });
+  const commands = getCommands();
 
   rl.prompt();
 
@@ -24,7 +26,16 @@ export function startREPL(): void {
       return;
     }
     const commandName = words[0];
-    console.log(`Your command was: ${commandName}`);
+    if (commandName in commands) {
+      try {
+        commands[commandName].callback(commands);
+      } catch (err: unknown) {
+        console.log(`Error: while executing ${commandName}`);
+      }
+    } else {
+      console.log("Unknown command");
+    }
+
     rl.prompt();
   });
 }
