@@ -1,4 +1,4 @@
-import { createInterface } from "node:readline";
+import { createInterface } from "readline";
 
 export function cleanInput(input: string): string[] {
   return input
@@ -12,14 +12,19 @@ export function startREPL(): void {
   const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: "Pokedex >"
+    prompt: "Pokedex > "
   });
+
   rl.prompt();
-  rl.on("line", (line: string) => {
-    const words = cleanInput(line);
-    if (words.length !== 0) {
-      console.log(`Your command was: ${words[0]}`)
+
+  rl.on("line", async (input) => {
+    const words = cleanInput(input);
+    if (words.length === 0) {
+      rl.prompt();
+      return;
     }
+    const commandName = words[0];
+    console.log(`Your command was: ${commandName}`);
     rl.prompt();
   });
 }
