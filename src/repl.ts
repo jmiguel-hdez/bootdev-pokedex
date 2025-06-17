@@ -29,7 +29,7 @@ export function startREPL(state: State): void {
     }
 
     try {
-      cmd.callback(state);
+      await cmd.callback(state);
     } catch (err: unknown) {
       console.log(`Error: while executing ${commandName}`, err);
     }
