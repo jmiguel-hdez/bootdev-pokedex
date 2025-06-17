@@ -4,10 +4,8 @@ export class PokeAPI {
   constructor() { }
 
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
-    console.log(`proxy: ${process.env.http_proxy}`)
     const locationAreaURL = `${PokeAPI.baseURL}/location-area/`;
     const fullURL = pageURL ?? locationAreaURL;
-    console.log(`fetchLocations URL: ${fullURL}`)
     const resp = await fetch(fullURL, {
       method: "GET",
       mode: "cors",
@@ -18,7 +16,6 @@ export class PokeAPI {
 
   async fetchLocation(locationName: string): Promise<Location> {
     const fullURL = `${PokeAPI.baseURL}/location-area/${locationName}`;
-    console.log(`fetchLocations URL: ${fullURL}`)
     const resp = await fetch(fullURL, {
       method: "GET",
       mode: "cors"
