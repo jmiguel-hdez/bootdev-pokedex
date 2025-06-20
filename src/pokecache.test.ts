@@ -14,7 +14,7 @@ test.concurrent.each([
   },
   {
     key: "https://example.com",
-    val: "testdata",
+    val: "testdata2",
     interval: 100, // 1/2 second
   },
 ])("test Caching $interval ms", async ({ key, val, interval }) => {

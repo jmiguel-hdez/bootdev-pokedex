@@ -27,14 +27,10 @@ export class Cache {
   // It should take a key (a string) and returns some object. Return undefined if the entry is missing.
   get<T>(key: string): T | undefined {
     const entry = this.#cache.get(key);
-    if (entry == undefined) {
-      return undefined;
+    if (entry !== undefined) {
+      return entry.val;
     }
-    return entry.val;
-  }
-
-  #timedelta() {
-    return Date.now() - this.#interval
+    return undefined;
   }
 
   //Create a #reap() method to delete any entries that are older than the interval. It should loop through the cche and delete any entries that
@@ -42,9 +38,10 @@ export class Cache {
   #reap() {
     // console.log("enter reap");
     // console.log(`delta: ${delta}`)
+    const now = Date.now();
     for (const [key, value] of this.#cache.entries()) {
       // console.log(`createdAt: ${value.createdAt} delta:${delta} lessthan: ${value.createdAt < delta}`);
-      if (value.createdAt < this.#timedelta()) {
+      if ((now - value.createdAt) > this.#interval) {
         // console.log(`delete ${key}`)
         this.#cache.delete(key)
       }
@@ -58,8 +55,9 @@ export class Cache {
   }
 
   stopReapLoop() {
-    clearInterval(this.#reapIntervalId);
-    this.#reapIntervalId = undefined;
+    if (this.#reapIntervalId) {
+      clearInterval(this.#reapIntervalId);
+      this.#reapIntervalId = undefined;
+    }
   }
-
 }

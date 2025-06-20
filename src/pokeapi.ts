@@ -8,6 +8,10 @@ export class PokeAPI {
     this.#cache = new Cache(interval);
   }
 
+  closeCache() {
+    this.#cache.stopReapLoop();
+  }
+
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
     const locationAreaURL = `${PokeAPI.baseURL}/location-area/`;
     const fullURL = pageURL || `${locationAreaURL}?offset=0&limit=20`;
@@ -15,7 +19,7 @@ export class PokeAPI {
     try {
       const cachedRsp = this.#cache.get<Promise<ShallowLocations>>(fullURL);
 
-      if (cachedRsp != undefined) {
+      if (cachedRsp) {
         // console.log("from cache")
         return cachedRsp;
       }
@@ -42,7 +46,7 @@ export class PokeAPI {
     const fullURL = `${PokeAPI.baseURL}/location-area/${locationName}`;
     try {
       const cached = this.#cache.get<Promise<Location>>(fullURL);
-      if (cached != undefined) {
+      if (cached) {
         // console.log("from cache")
         return cached;
       }

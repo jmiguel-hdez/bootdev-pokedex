@@ -16,8 +16,7 @@ export type CLICommand = {
   callback: (state: State) => Promise<void>;
 };
 
-export function initState(): State {
-  const INTERVAL: number = 10000 // 300 000 ms -> 5 min
+export function initState(cacheInterval: number): State {
   const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -26,7 +25,7 @@ export function initState(): State {
   const state: State = {
     readline: rl,
     commands: getCommands(),
-    pokeapi: new PokeAPI(INTERVAL),
+    pokeapi: new PokeAPI(cacheInterval),
     nextLocationsURL: "",
     prevLocationsURL: "",
   }
