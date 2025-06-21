@@ -68,6 +68,33 @@ export class PokeAPI {
       );
     }
   }
+
+  async fetchPokemon(pokemonName: string): Promise<Pokemon> {
+    const fullURL = `${PokeAPI.baseURL}/pokemon/${pokemonName}`;
+    try {
+      const cached = this.#cache.get<Promise<Pokemon>>(fullURL);
+      if (cached) {
+        // console.log("from cache")
+        return cached;
+      }
+
+      const resp = await fetch(fullURL, {
+        method: "GET",
+        mode: "cors"
+      });
+
+      if (!resp.ok) {
+        throw new Error(`${resp.status} ${resp.statusText}`);
+      }
+      const pokemon: Pokemon = await resp.json();
+      this.#cache.add(fullURL, pokemon);
+      return pokemon;
+    } catch (err: unknown) {
+      throw new Error(
+        `Error fetching loation '${pokemonName}': ${(err as Error).message})`
+      );
+    }
+  }
 }
 
 export type NamedAPIResource = {
@@ -128,4 +155,102 @@ export type Location = {
   names: Name[]; // The name of this resource listed in different languages.
   // a list of pokemn that can be encountered in this area along with version specific details about the encounter.
   pokemon_encounters: PokemonEncounter[];
+}
+
+export type PokemonAbility = {
+  is_hidden: boolean;
+  slot: number;
+  ability: NamedAPIResource;
+}
+
+export type PokemonType = {
+  slot: number;
+  type: NamedAPIResource;
+}
+
+export type PokemonFormType = {
+  slot: number;
+  type: NamedAPIResource;
+}
+
+export type PokemonTypePast = {
+  generation: NamedAPIResource;
+  types: PokemonType[];
+}
+
+export type PokemonAbilityPast = {
+  generation: NamedAPIResource;
+  abilities: PokemonAbility[];
+}
+
+export type PokemonHeldItem = {
+  item: NamedAPIResource;
+  version_details: PokemonHeldItemVersion[];
+}
+
+export type PokemonHeldItemVersion = {
+  version: NamedAPIResource;
+  rarity: number;
+}
+
+export type PokemonMove = {
+  move: NamedAPIResource;
+  version_group_details: PokemonMoveVersion[];
+}
+
+export type PokemonMoveVersion = {
+  move_learn_method: NamedAPIResource;
+  version_group: NamedAPIResource;
+  level_learned_at: number;
+  order: number;
+}
+
+export type PokemonStat = {
+  stat: NamedAPIResource;
+  effort: number;
+  base_stat: number;
+}
+
+export type PokemonSprites = {
+  front_default: string;
+  front_shiny: string;
+  front_female: string;
+  front_shiny_female: string;
+  back_default: string;
+  back_shiny: string;
+  back_female: string;
+  back_shiny_female: string;
+}
+
+export type PokemonCries = {
+  latest: string;
+  legacy: string;
+}
+
+export type VersionGameIndex = {
+  game_index: number;
+  version: NamedAPIResource;
+}
+
+export type Pokemon = {
+  id: number;
+  name: string;
+  base_experience: number;
+  height: number;
+  is_default: boolean;
+  order: number;
+  weight: number
+  abilities: PokemonAbility[];
+  forms: NamedAPIResource[];
+  game_indices: VersionGameIndex[];
+  held_items: PokemonHeldItem[];
+  location_area_encounters: string;
+  moves: PokemonMove[];
+  past_types: PokemonTypePast[];
+  past_abilities: PokemonAbilityPast[];
+  sprites: PokemonSprites;
+  cries: PokemonCries;
+  species: NamedAPIResource;
+  stats: PokemonStat[];
+  types: PokemonType[];
 }
