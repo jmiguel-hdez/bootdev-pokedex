@@ -64,7 +64,7 @@ export class PokeAPI {
       return location;
     } catch (err: unknown) {
       throw new Error(
-        `Error fetching loation '${locationName}': ${(err as Error).message})`
+        `Error fetching location '${locationName}': ${(err as Error).message})`
       );
     }
   }
@@ -91,7 +91,7 @@ export class PokeAPI {
       return pokemon;
     } catch (err: unknown) {
       throw new Error(
-        `Error fetching loation '${pokemonName}': ${(err as Error).message})`
+        `Error fetching pokemon '${pokemonName}': ${(err as Error).message})`
       );
     }
   }

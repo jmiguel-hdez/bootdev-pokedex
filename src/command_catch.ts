@@ -1,11 +1,6 @@
 import type { State } from "./state.js"
 import type { Pokemon } from "./pokeapi.js"
 
-function getChance(pokemon: Pokemon) {
-  const chance = 1 - pokemon.base_experience / 300;
-  return chance;
-}
-
 export async function commandCatch(state: State, ...args: string[]): Promise<void> {
   if (args.length != 1) {
     throw new Error("you must provide a pokemon name");
@@ -14,9 +9,9 @@ export async function commandCatch(state: State, ...args: string[]): Promise<voi
 
   console.log(`Throwing a Pokeball at ${name}...`);
   const pokemon = await state.pokeapi.fetchPokemon(name);
-  const chance = getChance(pokemon);
-  const pokeCatch = Math.random() > chance;
-  if (!pokeCatch) {
+  const res = Math.floor(Math.random() * pokemon.base_experience);
+
+  if (res > 40) {
     console.log(`${name} escaped!`);
     return;
   }
