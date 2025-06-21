@@ -7,12 +7,11 @@ export async function commandInspect(state: State, ...args: string[]): Promise<v
     throw new Error("must provide a name for pokemon");
   }
   const name = args[0];
-
-  if (!Object.hasOwn(state.pokedex, name)) {
-    console.log("you have not caught that pokemon");
-    return;
-  }
   const pokemon = state.pokedex[name];
+  if (!pokemon) {
+    throw new Error("you have not caught that pokemon");
+  }
+
   console.log(`Name: ${pokemon.name}`);
   console.log(`Height: ${pokemon.height}`);
   console.log(`Weight: ${pokemon.weight}`);
